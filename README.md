@@ -20,7 +20,7 @@ url = { https://github.com/YuchiSHEN/BSim.git }, <br>
 <br>
 <br>
 
-VGS Tool makes use of the following libraries: 
+This library makes use of the following libraries: 
 - [Kangaroo2](https://www.rhino3d.com/) by Daniel Piker. [For the physical system in ABM]
 <br>
 <br>
