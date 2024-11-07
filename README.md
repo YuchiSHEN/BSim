@@ -4,7 +4,7 @@ The Behaviour Simulator is an agent-based model framework designed as a plugin f
 <br>
 <br>
 
-VGS Tool is developed and maintained by:
+This library is developed and maintained by:
 - __Yuchi Shen__ [Southeast University of Nanjing, School of Architecture](http://arch.seu.edu.cn/jz_en/main.htm)
 - __Mengting Zhang__ [City University of Macau, Faculty of Innovation and Design](https://fiad.cityu.edu.mo/)
 <br>
