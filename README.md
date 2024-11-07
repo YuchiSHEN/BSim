@@ -15,7 +15,7 @@ author = {Shen, Yuchi and Zhang, Mengting}, <br>
 title = {{BSim: Behaviour Simulator}}, <br>
 year = {2024}, <br>
 note = {Release 1.00 Beta}, <br>
-url = {  }, <br>
+url = { https://github.com/YuchiSHEN/BSim.git }, <br>
 }
 <br>
 <br>
