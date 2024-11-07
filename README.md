@@ -32,8 +32,37 @@ To install  BSim, please copy the folder "BSim.dll" to any address in the comput
 Publications related to the BSim project include:
 - __Shen Yuchi, Xinyi Hu, Xiaotong Wang, Mengting Zhang, Lirui Deng ,Wei Wang__: Integrated framework for space-and energy-efficient retrofitting in multifunctional buildings: A synergy of agent-based modeling and performance-based modeling, Building Simulation, Build. Simul. 17, 1579–1600 (2024). https://doi.org/10.1007/s12273-024-1148-z 
 
+## Quick Start:
+An ABM system can be setted with:
+
 ```C#
-public void test(){}
-// The ABM system contains four main Class:
-//ISpace
+// import the namespace of BSim.dll:
+using BSim;
+
+//Construt a ABM class with four inputs [ISpace] [Event] [Person] [Communicate];
+ABM AgentBasedModel = new ABM(ISpaces, Event, Person, Communicate);
+
+//You can run the simulation with:
+
+if (Reset)
+    {
+     //refresh the system
+      ABM_simu = (ABM) Model; //nominate the ABM as ABM_simu
+      agentCount = ABM_simu.PPs_Wait.Count;
+    }
+    else if(Run)
+    {
+      if(ABM_simu != null && ABM_simu.PS.iteration < MaxIter && ABM_simu.PPs_Sink.Count < agentCount)
+      {
+        try{
+          Print(ABM_simu.Simulate(Reset, out timeRep));
+        }
+        catch (Exception e)
+        {
+          Print(e.ToString());
+        }
+      }
+    }
+
+//
 ```
