@@ -66,3 +66,4 @@ if (Reset)
 
 //
 ```
+[IBehavior](https://github.com/YuchiSHEN/BSim/blob/b61a4661b1a205a4df1a90641d4ae77826f16ae9/manual/Behaviour.md#behaviour)

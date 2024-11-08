@@ -13,7 +13,7 @@
 ```
 
 <br>
-## IBehav_NextJob
+## IBehav_NextJob <br>
 An instance of behavior; Shows how the agent decide the work of the next step;
 <br>
 
