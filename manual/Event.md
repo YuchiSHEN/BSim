@@ -1,4 +1,4 @@
-[Back to Menu](manual/README.md)
+[Back to Menu](https://github.com/YuchiSHEN/BSim.git)
 # Event as asbtract class
 **Event is an abstract class that defines the interest points in the ABM world and their mechanism of interaction.**
 <br>
