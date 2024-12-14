@@ -1,7 +1,7 @@
 # The framework of the BSim
 
 <div align="center">
-<img src="/pic/PrPrPr.svg">
+<img src="/pic/Pr.svg">
 </div>
 
 [**Person**](/manual/_cls_Person.md)
