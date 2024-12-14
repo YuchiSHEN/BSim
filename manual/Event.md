@@ -1,8 +1,8 @@
 # Event as asbtract class
 
 <br>
-[!TIP]
-***Event*** is an abstract class that defines the interest points in the ABM world and their mechanism of interaction.
+>[!TIP]
+**Event** is an abstract class that defines the interest points in the ABM world and their mechanism of interaction.
 <br>
 
 ```C#
