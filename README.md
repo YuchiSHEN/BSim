@@ -26,6 +26,6 @@
 
 ## Quick Start:
 ***You can following guidences to get aware of the BSim framework:***
-1. The introduction of the framework of the BSim:
+1. [The framework and structure of the BSim](/manual/Framework.md)
 2. [How to define an Event ?](/manual/Event.md)
 3. [How to define a Behavior ?](/manual/Behaviour.md)
