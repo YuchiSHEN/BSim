@@ -22,7 +22,7 @@
 [To install  BSim, please copy the folder "BSim.dll" to any address in the computer, and link all the components to this dll. If you work on Windows, please make sure that the files are unlocked.]
 
 ## Publications related to the BSim project include:
-1. __Shen Yuchi*, Xinyi Hu, Xiaotong Wang, Mengting Zhang, Lirui Deng ,Wei Wang*__: Integrated framework for space-and energy-efficient retrofitting in multifunctional buildings: A synergy of agent-based modeling and performance-based modeling, Building Simulation, Build. Simul. 17, 1579–1600 (2024). https://doi.org/10.1007/s12273-024-1148-z 
+1. __Shen Yuchi*, Xinyi Hu, Xiaotong Wang, Mengting Zhang, Lirui Deng ,Wei Wang*__: [Integrated framework for space-and energy-efficient retrofitting in multifunctional buildings: A synergy of agent-based modeling and performance-based modeling, Building Simulation, Build. Simul. 17, 1579–1600 (2024).](https://doi.org/10.1007/s12273-024-1148-z) 
 
 ## Quick Start:
 ***You can following guidences to get aware of the BSim framework:***
