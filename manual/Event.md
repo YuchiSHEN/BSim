@@ -148,3 +148,4 @@ Shows how the agent decide the work of the next step;
     }
 
 ```
+[See more instances of IEvent](/manual/_IEvent.md)
