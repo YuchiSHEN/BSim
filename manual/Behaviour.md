@@ -13,4 +13,4 @@
         public abstract List<IGoal> Act(Person P, ABM EN);
     }
 ```
-[The instances of Behavior in BSim](/manual/_Ibehav)
+[The instances of Behavior in BSim](/manual/_IBehav.md)
