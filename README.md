@@ -30,11 +30,10 @@ To install  BSim, please copy the folder "BSim.dll" to any address in the comput
 <br>
 
 Publications related to the BSim project include:
-- __Shen Yuchi, Xinyi Hu, Xiaotong Wang, Mengting Zhang, Lirui Deng ,Wei Wang__: Integrated framework for space-and energy-efficient retrofitting in multifunctional buildings: A synergy of agent-based modeling and performance-based modeling, Building Simulation, Build. Simul. 17, 1579–1600 (2024). https://doi.org/10.1007/s12273-024-1148-z 
+- __Shen Yuchi*, Xinyi Hu, Xiaotong Wang, Mengting Zhang, Lirui Deng ,Wei Wang*__: Integrated framework for space-and energy-efficient retrofitting in multifunctional buildings: A synergy of agent-based modeling and performance-based modeling, Building Simulation, Build. Simul. 17, 1579–1600 (2024). https://doi.org/10.1007/s12273-024-1148-z 
 
 ## Quick Start:
 ***You can following guidences to get aware of the BSim framework:***
 1. The introduction of the framework of the BSim:
-2. How to define an Event ? [IEvent](/manual/Event.md)
-<br>
-3. How to define an Behavior ? [IBehavior](https://github.com/YuchiSHEN/BSim/blob/b61a4661b1a205a4df1a90641d4ae77826f16ae9/manual/Behaviour.md#behaviour)
+2. [How to define an Event ?](/manual/Event.md)
+3. [How to define an Behavior ?](/manual/Behaviour.md#behaviour)
