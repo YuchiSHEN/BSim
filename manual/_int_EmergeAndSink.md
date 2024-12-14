@@ -1,3 +1,4 @@
+[Back](/manual/Framework.md)
 ### The interface of the function is:
 ```C#
     public interface Metabolism
