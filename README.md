@@ -25,7 +25,5 @@
 1. __Shen Yuchi*, Xinyi Hu, Xiaotong Wang, Mengting Zhang, Lirui Deng ,Wei Wang*__: [Integrated framework for space-and energy-efficient retrofitting in multifunctional buildings: A synergy of agent-based modeling and performance-based modeling, Building Simulation, Build. Simul. 17, 1579–1600 (2024).](https://doi.org/10.1007/s12273-024-1148-z) 
 
 ## Quick Start:
-***You can following guidences to get aware of the BSim framework:***
-1. [The framework and structure of the BSim](/manual/Framework.md)
-2. [How to define an Event ?](/manual/Event.md)
-3. [How to define a Behavior ?](/manual/Behaviour.md)
+***You can following guidelines to know the BSim framework:***
+[The framework and structure of the BSim](/manual/Framework.md)
