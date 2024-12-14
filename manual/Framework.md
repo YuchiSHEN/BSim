@@ -1,4 +1,9 @@
 # The framework of the BSim
+
+<div align="center">
+<img src="/pic/primary.svg">
+</div>
+
 [**Person**](/manual/_cls_Person.md)
 <br>
 [**Metabolism**](/manual/_int_EmergeAndSink.md)
