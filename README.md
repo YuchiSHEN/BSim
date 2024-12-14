@@ -6,7 +6,7 @@ __This library is developed and maintained by:__
 - __Yuchi Shen__ [Southeast University of Nanjing, School of Architecture](http://arch.seu.edu.cn/jz_en/main.htm)
 - __Mengting Zhang__ [City University of Macau, Faculty of Innovation and Design](https://fiad.cityu.edu.mo/)
 
-## If you use the BSim library, please reference the official GitHub repository:
+__If you use the BSim library, please reference the official GitHub repository:__
 
   @Misc{BSim2024, <br>
   author = {Shen, Yuchi and Zhang, Mengting}, <br>
