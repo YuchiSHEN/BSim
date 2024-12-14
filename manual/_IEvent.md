@@ -1,8 +1,13 @@
 [Back](/manual/Event.md)
 <br>
 <br>
-Find:
+Goto:
 [IEvent_M_vS_aS_St](/manual/_IEvent.md#ievent_m_vs_as_st)
+[IEvent_M_vS_aM_St](/manual/_IEvent.md#ievent_m_vs_am_st)
+[IEvent_M_vS_aS_St_Q](/manual/_IEvent.md#ievent_m_vs_am_st_q)
+<br>
+<br>
+
 ## IEvent_M_vS_aS_St: 
 __The event can be used by [M: multiple agents], visited in [vS: single time], activated by [aS: single agent], Standing [St]__
 ```C#
