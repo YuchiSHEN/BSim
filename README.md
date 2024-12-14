@@ -10,7 +10,7 @@ This library is developed and maintained by:
 <br>
 
 If you use the BSim library, please reference the official GitHub repository: <br>
-@Misc{vgs2021, <br>
+@Misc{BSim2024, <br>
 author = {Shen, Yuchi and Zhang, Mengting}, <br>
 title = {{BSim: Behaviour Simulator}}, <br>
 year = {2024}, <br>
@@ -33,37 +33,8 @@ Publications related to the BSim project include:
 - __Shen Yuchi, Xinyi Hu, Xiaotong Wang, Mengting Zhang, Lirui Deng ,Wei Wang__: Integrated framework for space-and energy-efficient retrofitting in multifunctional buildings: A synergy of agent-based modeling and performance-based modeling, Building Simulation, Build. Simul. 17, 1579–1600 (2024). https://doi.org/10.1007/s12273-024-1148-z 
 
 ## Quick Start:
-An ABM system can be setted with:
-
-```C#
-// import the namespace of BSim.dll:
-using BSim;
-
-//Construt a ABM class with four inputs [ISpace] [Event] [Person] [Communicate];
-ABM AgentBasedModel = new ABM(ISpaces, Event, Person, Communicate);
-
-//You can run the simulation with:
-
-if (Reset)
-    {
-     //refresh the system
-      ABM_simu = (ABM) Model; //nominate the ABM as ABM_simu
-      agentCount = ABM_simu.PPs_Wait.Count;
-    }
-    else if(Run)
-    {
-      if(ABM_simu != null && ABM_simu.PS.iteration < MaxIter && ABM_simu.PPs_Sink.Count < agentCount)
-      {
-        try{
-          Print(ABM_simu.Simulate(Reset, out timeRep));
-        }
-        catch (Exception e)
-        {
-          Print(e.ToString());
-        }
-      }
-    }
-
-//
-```
+***You can following guidences to get aware of the BSim framework:***
+1. The introduction of the framework of the BSim:
+2. The 
+[IEvent]()
 [IBehavior](https://github.com/YuchiSHEN/BSim/blob/b61a4661b1a205a4df1a90641d4ae77826f16ae9/manual/Behaviour.md#behaviour)
