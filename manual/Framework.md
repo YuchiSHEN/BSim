@@ -6,3 +6,5 @@
 [**Behavior**](/manual/Behaviour.md)
 <br>
 [**Event**](/manual/Event.md)
+<br>
+[**Communication**](/manual/Communication.md)
