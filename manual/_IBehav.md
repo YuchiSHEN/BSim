@@ -1,3 +1,4 @@
+[Back](/manual/Behaviour.md)
 ## IBehav_NextJob: 
 __The behavior for agents to decide the next work in the simulation__
 ```C#
