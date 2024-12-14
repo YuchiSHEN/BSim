@@ -2,7 +2,9 @@
 
 <br>
 >[!TIP]
-**Event** is an abstract class that defines the interest points in the ABM world and their mechanism of interaction.
+<br>
+**Event**
+<br> is an abstract class that defines the interest points in the ABM world and their mechanism of interaction.
 <br>
 
 ```C#
