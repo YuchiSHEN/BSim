@@ -1,11 +1,8 @@
 # Event as asbtract class
+**Event is an abstract class that defines the interest points in the ABM world and their mechanism of interaction.**
+<br>
 
-<br>
->[!TIP]
-<br>
-**Event**
-<br> is an abstract class that defines the interest points in the ABM world and their mechanism of interaction.
-<br>
+***The following code shows the format of defining an Event with an abstract class:***
 
 ```C#
 
@@ -29,13 +26,11 @@
      public bool IsType(string type)
      {
          if(Type!=null)
-         { 
-
-         if (Type.Name != null)
-         {
-             if (Type.Name == type) { return true; }
-         }
-
+        {  
+          if (Type.Name != null)
+          {
+              if (Type.Name == type) { return true; }
+          }
          }
 
          if (ID != null)
@@ -45,15 +40,13 @@
                  return true;
              }
          }
- 
-         return false;
-         
+          return false;  
      }
  }
 ```
-
 <br>
-An instance of the Event class:
+
+**An instance of the Event class:**
 ## IEvent_S_vS_aS_St <br>
 Shows how the agent decide the work of the next step;
 <br>
@@ -61,8 +54,9 @@ Shows how the agent decide the work of the next step;
 ```C#
     public class IEvent_S_vS_aS_St : Event
     {
-        double activate_dis = 0.5;
-        int timeCons = 50;
+        double activate_dis = 0.5; //The event can be activated within the distance of this value;
+        int timeCons = 50; //The length of the time(delta t) for visiting this event;
+
         public IEvent_S_vS_aS_St(string ID, Point3d locate,int TimeConseume, double activate_dis, string Etype)
         {
             this.Type =new EventType(Etype);
@@ -74,6 +68,7 @@ Shows how the agent decide the work of the next step;
             this.R = activate_dis * 10;
             timeCons = TimeConseume;
         }
+
         public override void Affect(Person P, ABM ABM)
         {
                  if (P.State != Person_state.Busy)
