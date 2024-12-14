@@ -36,5 +36,5 @@ Publications related to the BSim project include:
 ***You can following guidences to get aware of the BSim framework:***
 1. The introduction of the framework of the BSim:
 2. The 
-[IEvent](https://github.com/YuchiSHEN/BSim/blob/b61a4661b1a205a4df1a90641d4ae77826f16ae9/manual/Event.md)
+[IEvent](/manual/Event.md)
 [IBehavior](https://github.com/YuchiSHEN/BSim/blob/b61a4661b1a205a4df1a90641d4ae77826f16ae9/manual/Behaviour.md#behaviour)
