@@ -1,4 +1,4 @@
-[Back to Menu](README.md)
+[Back to Menu](manual/README.md)
 # Event as asbtract class
 **Event is an abstract class that defines the interest points in the ABM world and their mechanism of interaction.**
 <br>
