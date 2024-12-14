@@ -24,25 +24,7 @@
      public abstract bool CanBeVisit(Person P, ABM ABM);
      public abstract void Expire(Person P);
 
-     public bool IsType(string type)
-     {
-         if(Type!=null)
-        {  
-          if (Type.Name != null)
-          {
-              if (Type.Name == type) { return true; }
-          }
-         }
-
-         if (ID != null)
-         {
-             if (ID==type)
-             {
-                 return true;
-             }
-         }
-          return false;  
-     }
+     public bool IsType(string type){...}
  }
 ```
 <br>
