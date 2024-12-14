@@ -101,3 +101,16 @@
         }
     }
 ```
+
+Currently a person have such states:
+```C#
+    public enum Person_state
+    {
+        Busy,
+        Walk,
+        Talk,
+        Free,
+        Wait,
+        Gone
+    }
+```
