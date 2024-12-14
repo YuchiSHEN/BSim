@@ -49,7 +49,7 @@
 
 **An instance of the Event class:**
 ## IEvent_S_vS_aS_St <br>
-Shows how the agent decide the work of the next step;
+__The event can be used by [S: single agent], visited in [vS: single time], activated by [aS: single agent], Standing [St]__
 <br>
 
 ```C#
