@@ -1,10 +1,9 @@
 [Back](/manual/Framework.md)
 
 # Behavior
+**Behavior is an abstract class that defines how the agents make decisions according to their situations.**
 
 ```C#
-
-//Behavior is an abstract class that implements the behavior of agents 
     public abstract class Behavior
     {
         public Behavior() { }
@@ -13,4 +12,5 @@
         public abstract List<IGoal> Act(Person P, ABM EN);
     }
 ```
-[The instances of Behavior in BSim](/manual/_IBehav.md)
+
+[More instances of Behavior](/manual/_IBehav.md)
