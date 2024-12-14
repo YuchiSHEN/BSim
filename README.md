@@ -1,6 +1,6 @@
 # BSim - Behaviour Simulator
 
-### ***The Behaviour Simulator is an agent-based model framework designed as a plugin for Rhino software. This implementation offers a lightweight and easily customizable system, enabling users to define agent behaviors and explore system dynamics through simulations. The development is implemented as a plug-in for the CAD environment [McNeel Rhino/Grasshopper](https://www.rhino3d.com/) for both Windows and MacOS.***
+### The Behaviour Simulator is an agent-based model framework designed as a plugin for Rhino software. This implementation offers a lightweight and easily customizable system, enabling users to define agent behaviors and explore system dynamics through simulations. The development is implemented as a plug-in for the CAD environment [McNeel Rhino/Grasshopper](https://www.rhino3d.com/) for both Windows and MacOS.
 
 ## This library is developed and maintained by:
 - __Yuchi Shen__ [Southeast University of Nanjing, School of Architecture](http://arch.seu.edu.cn/jz_en/main.htm)
