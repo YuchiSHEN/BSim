@@ -1,4 +1,5 @@
 [Back](/manual/Framework.md)
+__The attributes and features of an agent (Person):__
 ```C#
     public class Person
     {
@@ -103,7 +104,7 @@
     }
 ```
 
-Currently a person have such states:
+__Currently a person have such states:__
 ```C#
     public enum Person_state
     {
