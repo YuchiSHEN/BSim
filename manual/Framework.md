@@ -3,4 +3,6 @@
 <br>
 [**Metabolism**](/manual/_int_EmergeAndSink.md)
 <br>
-[**Behavior**](/manual/_int_EmergeAndSink.md)
+[**Behavior**](/manual/Behaviour.md)
+<br>
+[**Event**](/manual/Event.md)
