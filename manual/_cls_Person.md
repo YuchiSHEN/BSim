@@ -1,4 +1,5 @@
 [Back](/manual/Framework.md)
+<br>
 __The attributes and features of an agent (Person):__
 ```C#
     public class Person
