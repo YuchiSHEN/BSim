@@ -77,6 +77,10 @@ __The behavior for agents to decide the next work in the simulation__
 ```
 
 ## IBehav_DoJob
+<div align="left">
+<img src="/pic/IBehav_DoJob.svg" width="550">
+</div>
+
 __The behavior for agents to process the current work__
 ```C#
     public class IBehav_DoJob : Behavior
