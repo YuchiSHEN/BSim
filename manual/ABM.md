@@ -25,9 +25,19 @@
         //Documentation;
         public HashSet<Person_Doc> Document;
 
+        //Construction Function
         public ABM (ISpace Space, List<Event> POIs, List<Person> PPs, List<Communicate> Communis){...}
 
-        //***This function defines the interactive mechanism inside the ABM simulation:***
+        //the function activate the metabolism;
+        public void PPs_Emerge(){...}
+        public void PPs_Expire(){...}
+    }
+```
+<br>
+
+**The decision and interaction routine:**
+```C#
+  //***This function defines the interactive mechanism inside the ABM simulation: (as a function in ABM class)***
         public List<IGoal> InteractSystem(out string TimeRep)
         {
             MiniWatch MWatch = new MiniWatch();
@@ -91,8 +101,12 @@
             TimeRep = MWatch.GetTime();
             return G;
         }
+```
+<br>
 
-        //***ABM Simulation***
+**The main iteration in ABM Simulation:**
+```C#
+   //***ABM Simulation (as a function in ABM class)***
         public string Simulate(bool Reset,out string TimeRep)
         {
             string Log = Main.version+"_Simulate Report:\n";
@@ -123,9 +137,4 @@
 
             return Log;
         }
-
-        //the function activate the metabolism;
-        public void PPs_Emerge(){...}
-        public void PPs_Expire(){...}
-    }
 ```
