@@ -1,5 +1,10 @@
 [Back](/manual/Behaviour.md)
 ## IBehav_NextJob: 
+
+<div align="left">
+<img src="/pic/IBehav_NextToDo.svg" width="550">
+</div>
+
 __The behavior for agents to decide the next work in the simulation__
 ```C#
     public class IBehav_NextJob : Behavior
