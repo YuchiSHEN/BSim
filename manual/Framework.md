@@ -1,7 +1,13 @@
 # The framework of the BSim
 
-<div align="left">
+<div align="middle">
 <img src="/pic/Pr.svg" width="450">
+</div>
+
+__The process in every iteration:__
+
+<div align="middle">
+<img src="/pic/MainLoop.svg" width="650">
 </div>
 
 [**ABM**](/manual/ABM.md)
