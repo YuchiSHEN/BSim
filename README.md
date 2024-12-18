@@ -11,7 +11,7 @@ __This library is developed and maintained by:__
 __If you use the BSim library, please reference the official GitHub repository:__
 
   @Misc{BSim2024, <br>
-  author = {Shen, Yuchi and Zhang, Mengting}, <br>
+  author = {Shen, Yuchi; Zhang, Mengting and Cheng, Shi}, <br>
   title = {{BSim: Behaviour Simulator}}, <br>
   year = {2024}, <br>
   note = {Release 1.00 Beta}, <br>
