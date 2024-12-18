@@ -2,6 +2,10 @@
 
 __The Behaviour Simulator is an agent-based model framework designed as a plugin for Rhino software. This implementation offers a lightweight and easily customizable system, enabling users to define agent behaviors and explore system dynamics through simulations. The development is implemented as a plug-in for the CAD environment [McNeel Rhino/Grasshopper](https://www.rhino3d.com/) for both Windows and MacOS.__
 
+<div align="center">
+<img src="pic/multiple.gif" width=1000>
+</div>
+
 __This library is developed and maintained by:__
 - __Yuchi Shen__ [Southeast University of Nanjing, School of Architecture](http://arch.seu.edu.cn/jz_en/main.htm)
 - __Mengting Zhang__ [City University of Macau, Faculty of Innovation and Design](https://fiad.cityu.edu.mo/)
