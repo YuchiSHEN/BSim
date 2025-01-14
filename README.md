@@ -9,7 +9,7 @@ __The Behaviour Simulator is an agent-based model framework designed as a plugin
 __This library is developed and maintained by:__
 - __Yuchi Shen__ [Southeast University of Nanjing, School of Architecture](http://arch.seu.edu.cn/jz_en/main.htm)
 - __Mengting Zhang__ [City University of Macau, Faculty of Innovation and Design](https://fiad.cityu.edu.mo/)
-- __Shi Cheng__ [Southeast University of Nanjing, School of Architecture](http://arch.seu.edu.cn/jz_en/main.htm) ; [Architecture,Chinese National Visual Image Research Base]()
+
 <br>
 
 __If you use the BSim library, please reference the official GitHub repository:__
