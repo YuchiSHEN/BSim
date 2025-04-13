@@ -16,7 +16,7 @@ __If you use the BSim library, please reference the official GitHub repository:_
 
   @Misc{BSim2024, <br>
   author = {Shen, Yuchi; Zhang, Mengting}, <br>
-  title = {{BSim: Behaviour Simulator}}, <br>
+  title = {BSim: Behaviour Simulator}, <br>
   year = {2024}, <br>
   note = {Release 1.00 Beta}, <br>
   url = { https://github.com/YuchiSHEN/BSim.git }, <br>
