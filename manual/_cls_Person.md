@@ -2,106 +2,129 @@
 <br>
 __The attributes and features of an agent (Person):__
 ```C#
-    public class Person
+    public class Agent
     {
-        #region attributes
-        //Basic Behaviors
-        public List<Behavior>Behaviors;
-        public Behavior IMove;
-
-        //Plan
-        public List<string>ToDoList;
-        public string NextToDo;
-        public Person_state State;
-        public Event Target;
-
-        //Memory
-        public List<Memory> Brain;
-
-        //Body Volume
-        public double SizeR;
-
-        //Body as Curve
-        public Curve Body;
-
-        //Attribute
-        public string Name;
-        public double Strength;
-        public double Cur_Strength;
-
-        //Location
-        public Point3d Locate;
-        public List<Point3d> Path;
-        public int step;//The stage in the path list;
-
-        private Vector3d Fvec;
-        public Vector3d FaceVec;
-
-        private double ViewLength;
-        private double ViewAngle;
-        public Curve ViewRange;
-
-        #endregion
-
-        #region OpenFunction
-        public Metabolism Meta;
-        #endregion
-
-        public Person(string name, Point3d P, double R, double S,double VLength,double VAngle, Behavior IWalk, List<Behavior> behaviors, List<string> ToDoList){ }
-        
-
-        public List<IGoal> Act(ABM EN)
+        private List<string> _log = new List<string>();
+        private int max = 20;
+        public string log
         {
-            //the goals into physical system
-            List<IGoal> Goals = new List<IGoal>();
-
-            foreach (Behavior Be in Behaviors)
+            get
             {
-                Goals.AddRange(Be.Act(this,EN));
+                return string.Join("\n", _log);
             }
-            return Goals;
-        }
-
-        public List<IGoal> DoBehav(ABM ABM, Behavior IBehav)
-        {
-            return IBehav.Act(this, ABM);
-        }
-
-        public class Memory
-        {
-            public Event Event;
-            //Two paras show the state of usage of certain Event;
-            public int Step;
-            public int MaxStep;
-
-            public Memory(Event Event,int MaxStep)
+            set
             {
-                this.Event = Event;
-                this.MaxStep = MaxStep;
-                this.Step = 0;
-            }
-            public bool IfFinished()
-            {
-                if (Step == MaxStep) { return true; }
-                else { return false; }
-            }
-            public override string ToString()
-            {
-                return Event.ID.ToString() + string.Format(" : {0}/{1}", this.Step.ToString(), this.MaxStep.ToString());
+                string[] splitResult = value.Split(new[] { Environment.NewLine, "\n", "\r\n" }, StringSplitOptions.None);
+                if (splitResult.Length > 0) 
+                {
+                    int remove = _log.Count + splitResult.Length - max;
+                    if (remove>0)
+                    {
+                        for (int i = 0; i < remove; i++) { if(_log.Count>0)_log.RemoveAt(0); }
+                    }
+                    _log.AddRange(splitResult);
+                }
             }
         }
 
-        public void DocMemory(ref HashSet<Person_Doc> docs)
+        public Agent_Attr attr;
+        public Agent_Bhav bhav;
+        public Agent_View view;
+        public Agent_Meta meta;
+
+        public Agent_Temp temp;
+
+        public Agent DeepCopy()
         {
-            if (docs.TryGetValue(new Person_Doc(this), out Person_Doc doc))
+            Agent copy=new Agent(this);
+            copy.temp = new Agent_Temp(temp);
+            return copy;
+        }
+
+        public Agent(Agent a) 
+        {
+            this.log = a.log;
+            attr=new Agent_Attr(a.attr);
+            bhav=new Agent_Bhav(a.bhav);
+            view=new Agent_View(a.view);
+            meta=a.meta;
+            temp=new Agent_Temp();
+        }
+
+        public Agent(Agent_Attr attr, Agent_View view, Agent_Bhav bhav, Agent_Meta Meta)
+        {
+            log = "";
+            this.attr = new Agent_Attr(attr);
+            this.bhav = new Agent_Bhav(bhav);
+            this.view = new Agent_View(view);
+            this.meta = Meta;
+            this.temp = new Agent_Temp();
+        }
+
+        public void DocMemory(ref HashSet<Agent_Doc> docs, int tab)
+        {
+            if (docs.TryGetValue(new Agent_Doc(this, tab), out Agent_Doc doc))
             {
                 doc.record(this);
             }
             else
             {
-                docs.Add(new Person_Doc(this));
+                docs.Add(new Agent_Doc(this,tab));
             }
         }
+
+        #region GetValues
+        public Vector3d GetFvec()
+        {
+            if (temp.Path.Count > 0)
+            {
+                Vector3d vec = new Vector3d(temp.Path[temp.step] - attr.Locate);
+                attr.Fvec = vec;
+                return vec;
+            }
+            else if (temp.Target != null)
+            {
+                Vector3d vec = new Vector3d(temp.Target.locate - attr.Locate);
+                if (vec.Length > 0) { attr.Fvec = vec; return vec; } else { return attr.Fvec; }
+            }
+            else
+            {
+                return attr.Fvec;
+            }
+
+        }
+        public Vector3d GetSpdVec()
+        {
+            if (temp.State == Agent_state.Walk && temp.Path.Count > 0 && temp.step >= 0)
+            {
+                Vector3d vec = temp.Path[temp.step] - attr.Locate; vec.Unitize();
+                vec *= attr.Speed;
+                return vec;
+            }
+            else
+            {
+                return Vector3d.Zero;
+            }
+        }
+        public int GetPoss()
+        {
+            if (temp.Target != null && temp.State == Agent_state.Busy && temp.Target.Poss < attr.Postures.Length)
+            { return temp.Target.Poss; }
+            else { return 0; }
+        }
+        #endregion
+
+        public override string ToString()
+        {
+            string report =
+               $"\n________________" +
+               attr.ToString() +
+               bhav.ToString() +
+               temp.ToString() +
+               $"\n________________";
+            return report;
+        }
+
     }
 ```
 

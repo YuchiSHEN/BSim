@@ -14,167 +14,72 @@ Goto:
 ## IEvent_M_vS_aS_St: 
 __The event can be used by [M: multiple agents], visited in [vS: single time], activated by [aS: single agent], Standing [St]__
 ```C#
-       public class IEvent_M_vS_aS_St : Event
+    public class IEvent_M_vS_aS_St : Event
     {
         double activate_dis = 0.5;
-        int timeCons = 50;
-        List<Point3d> activate_pts;
-        List<string> activate_pts_ocu;
-        List<bool> activate_pts_exp;
 
-        public IEvent_M_vS_aS_St(string ID, Point3d locate, int TimeConseume, double act_dis, List<Point3d> act_pts, string Etype)
+        public IEvent_M_vS_aS_St(string ID, Point3d locate, int TimeConseume, double act_dis, List<Point3d> act_pts, string Etype, Func<List<Event>, Agent, ABM, List<Event>> SelFunc, Object Range, double ra,int poss)
         {
-            this.Type = new EventType(Etype);
-            this.ID = ID;
-            this.locate = locate;
-            this.users = new List<Person>();
-            this.beTarget = new List<Person>();
+            Default_Construct(ID, Etype, SelFunc, locate, TimeConseume, act_pts, SpaceSearch.ToRTRange(Range, ra), ra, poss);
             activate_dis = act_dis;
-            this.R = act_dis * 10;
-            activate_pts = act_pts;
-            activate_pts_ocu = act_pts.Select(p => "null").ToList();
-            activate_pts_exp = act_pts.Select(p => false).ToList();
-            timeCons = TimeConseume;
         }
 
-        public override void Affect(Person P, ABM ABM)
+        public override void Affect(Agent P, ABM ABM)
         {
-            if (P.State != Person_state.Busy)
+            if (P.temp.State != Agent_state.Busy)
             {
-                P.State = Person_state.Busy;
-
-                if (!this.users.Contains(P) && IfDidBefore(P).Count == 0)
-                {
-                    this.users.Add(P);
-                    P.Brain.Add(new Memory(this, timeCons));
-                }
-
-                P.Path = new List<Point3d>();
-                P.step = 0;
+                P.temp.State = Agent_state.Busy;
+                Register_User(P);
+                P.temp.ClearPath();
             }
         }
 
-        public override bool Activate(Person P, ABM ABM)
+        public override bool Activate(Agent P, ABM ABM)
         {
-            bool Did = false;
+            bool[] condition = Default_ActivateConditions(P, ABM);
+            if (!condition[0]) { return false; }
+            if (!condition[1]) { return false; }
+            if (!condition[2]) { return false; }
+            if (!condition[3]) { return false; }
 
-            //if Did
-            List<Memory> RelatedMemors = IfDidBefore(P);
+            int k = IndexInQueue(P);
+            if (k > -1) { return sub_locates[k].DistanceTo(P.attr.Locate) < activate_dis; }
 
-            if (RelatedMemors.Count > 0)
-            {
-                if (RelatedMemors[0].Step == RelatedMemors[0].MaxStep)
-                { Did = true; }
-            }
-
-            int k = NameInOccupancy(P);
-
-            bool reach = false;
-
-            if (k != -1)
-            {
-                reach = activate_pts[k].DistanceTo(P.Locate) < activate_dis;
-            }
-
-            //Not visited, Distance close, Fullfill the plan;
-            if (!Did && reach && IsType(P.NextToDo) && P.Target.ID == this.ID)
-            {
-                return true;
-            }
-            else
-            { return false; }
+            return false;
         }
 
-        public override void Approach(Person P, ABM EN)
+        public override void Approach(Agent P, ABM EN)
         {
-            int k = NameInOccupancy(P);
-            if (k != -1)
+            int k = IndexInQueue(P);
+            if (k > -1)
             {
-                P.Path = PathNet.ShortestPath_Quick(EN.Space.Quick_WalkSpace, P.Locate, activate_pts[k], Config.SearchRange, Config.SoomthRate);
-                P.step = 0;
-                P.State = Person_state.Walk;
+                P.temp.Path = PathNet.PathSearch(EN.Space.GraphMap, P.attr.Locate, sub_locates[k], Config.SearchRange, Config.SoomthRate);
+                P.temp.step = 0;
+                P.temp.State = Agent_state.Walk;
+                return;
             }
 
-            if (k == -1)
+            int index= InertQueue_Random(P,EN.Iteration);
+            if (index > -1)
             {
-                List<int> via_act_pts = Viable_act_pts();
-                if (via_act_pts.Count > 0)
-                {
-                    activate_pts_ocu[via_act_pts[0]] = P.Name;
-                    P.Path = PathNet.ShortestPath_Quick(EN.Space.Quick_WalkSpace, P.Locate, activate_pts[via_act_pts[0]], Config.SearchRange, Config.SoomthRate);
-                    P.step = 0;
-                    P.State = Person_state.Walk;
-                }
+                P.temp.Path = PathNet.PathSearch(EN.Space.GraphMap, P.attr.Locate, sub_locates[index], Config.SearchRange, Config.SoomthRate);
+                P.temp.step = 0;
+                P.temp.State = Agent_state.Walk;
             }
         }
 
-        public override bool CanProceed(Person P, ABM EN)
+        public override bool CanProceed(Agent P, ABM EN)
         {
-            int k = NameInOccupancy(P);
-            if (k == -1 || P.Locate.DistanceTo(activate_pts[k]) >= activate_dis)
+            int k = IndexInQueue(P);
+            if (k == -1 || P.attr.Locate.DistanceTo(sub_locates[k]) >= activate_dis)
             { return false; }
             return true;
         }
 
-        private List<Memory> IfDidBefore(Person P)
+        public override bool CanBeVisit(Agent P, ABM ABM)
         {
-            List<Memory> RelatedMemors = P.Brain.Where(p => p.Event.ID == this.ID).ToList();
-            return RelatedMemors;
-        }
-
-        private List<int> Viable_act_pts()
-        {
-            List<int> viables = new List<int>();
-            for (int i = 0; i < activate_pts.Count; i++)
-            {
-                if (activate_pts_ocu[i] == "null") { viables.Add(i); }
-            }
-            return viables;
-        }
-
-        private int NameInOccupancy(Person P)
-        {
-            int k = -1;
-            for (int i = 0; i < activate_pts_ocu.Count; i++)
-            {
-                if (activate_pts_ocu[i] == P.Name)
-                {
-                    k = i;
-                }
-            }
-            return k;
-        }
-
-        public override bool CanBeVisit(Person P, ABM ABM)
-        {
-            //
-            bool Did = false;
-
-            //if Did
-            List<Memory> RelatedMemors = IfDidBefore(P);
-
-            if (RelatedMemors.Count > 0)
-            {
-                if (RelatedMemors[0].Step == RelatedMemors[0].MaxStep)
-                { Did = true; }
-            }
-
-            if (Did) { return false; }
-            if (this.beTarget.Contains(P)) { return true; }
-            if (this.beTarget.Count >= activate_pts.Count) { return false; }
+            if (PreviouslyCompeleted(P)) { return false; }
             return true;
-        }
-
-        public override void Expire(Person P)
-        {
-            int k = NameInOccupancy(P);
-            if (k == -1) { return; }
-
-            if (users.Contains(P)) { users.Remove(P); }
-            if (beTarget.Contains(P)) { beTarget.Remove(P); }
-
-            activate_pts_ocu[k] = "null";
-            activate_pts_exp[k] = false;
         }
     }
 ```
@@ -185,184 +90,88 @@ __The event can be used by [M: multiple agents], visited in [vS: single time], a
     public class IEvent_M_vS_aM_St : Event
     {
         double activate_dis = 0.5;
-        int timeCons = 50;
-        List<Point3d> activate_pts;
-        List<string> activate_pts_ocu;
-        List<bool> activate_pts_exp;
 
-
-        public IEvent_M_vS_aM_St(string ID, Point3d locate, int TimeConseume, double act_dis, List<Point3d> act_pts, string Etype)
+        public IEvent_M_vS_aM_St(string ID, Point3d locate, int TimeConseume, double act_dis, List<Point3d> act_pts, string Etype, Func<List<Event>, Agent, ABM, List<Event>> SelFunc, Object Range, double ra, int poss)
         {
-            this.Type =new EventType(Etype);
-            this.ID = ID;
-            this.locate = locate;
-            this.users = new List<Person>();
-            this.beTarget = new List<Person>();
+            Default_Construct(ID, Etype, SelFunc, locate, TimeConseume, act_pts, SpaceSearch.ToRTRange(Range, ra), ra, poss);
             activate_dis = act_dis;
-            this.R = act_dis * 10;
-            activate_pts = act_pts;
-            activate_pts_ocu = act_pts.Select(p => "null").ToList();
-            activate_pts_exp = act_pts.Select(p => false).ToList();
-            timeCons = TimeConseume;
         }
 
-        public override void Affect(Person P, ABM ABM)
+        public override void Affect(Agent P, ABM ABM)
         {
-            if (P.State != Person_state.Busy)
+            if (P.temp.State != Agent_state.Busy)
             {
-                P.State = Person_state.Busy;
+                P.temp.State = Agent_state.Busy;
 
-                if (!this.users.Contains(P) && IfDidBefore(P).Count == 0)
-                {
-                    this.users.Add(P);
-                    P.Brain.Add(new Memory(this, timeCons));
-                }
+                Register_User(P);
 
-                P.Path = new List<Point3d>();
-                P.step = 0;
+                P.temp.ClearPath();
             }
         }
 
-        public override bool Activate(Person P, ABM ABM)
+        public override bool Activate(Agent P, ABM ABM)
         {
-            bool Did = false;
+            bool[] condition = Default_ActivateConditions(P, ABM);
+            if (!condition[0]) { return false; }
+            if (!condition[1]) { return false; }
+            if (!condition[2]) { return false; }
+            if (!condition[3]) { return false; }
 
-            //if Did
-            List<Memory> RelatedMemors = IfDidBefore(P);
+            int k = IndexInQueue(P);
+            if (k > -1) { return sub_locates[k].DistanceTo(P.attr.Locate) < activate_dis; }
 
-            if (RelatedMemors.Count > 0)
-            {
-                if (RelatedMemors[0].Step == RelatedMemors[0].MaxStep)
-                { Did = true; }
-            }
-
-            int k = NameInOccupancy(P);
-
-            bool reach = false;
-
-            if (k != -1)
-            {
-                reach = activate_pts[k].DistanceTo(P.Locate) < activate_dis;
-            }
-
-            //Not visited, Distance close, Fullfill the plan;
-            if (!Did && reach && IsType(P.NextToDo) && P.Target.ID == this.ID)
-            {
-                //activate_pts_ocu[sel] = P.Name;
-                return true;
-            }
-            else
-            { return false; }
+            return false;
         }
 
-        public override void Approach(Person P, ABM EN)
+        public override void Approach(Agent P, ABM EN)
         {
-            int k = NameInOccupancy(P);
-            if (k != -1)
+            int k = IndexInQueue(P);
+            if (k > -1)
             {
-                P.Path = PathNet.ShortestPath_Quick(EN.Space.Quick_WalkSpace, P.Locate, activate_pts[k], Config.SearchRange, Config.SoomthRate);
-                P.step = 0;
-                P.State = Person_state.Walk;
+                P.temp.Path = PathNet.PathSearch(EN.Space.GraphMap, P.attr.Locate, sub_locates[k], Config.SearchRange, Config.SoomthRate);
+                P.temp.step = 0;
+                P.temp.State = Agent_state.Walk;
+                return;
             }
 
-            if (k == -1)
+            int index = InertQueue_Random(P, EN.Iteration);
+            if (index > -1)
             {
-                List<int> via_act_pts = Viable_act_pts();
-                if (via_act_pts.Count > 0)
-                {
-                    activate_pts_ocu[via_act_pts[0]] = P.Name;
-                    P.Path = PathNet.ShortestPath_Quick(EN.Space.Quick_WalkSpace, P.Locate, activate_pts[via_act_pts[0]], Config.SearchRange, Config.SoomthRate);
-                    P.step = 0;
-                    P.State = Person_state.Walk;
-                }
+                P.temp.Path = PathNet.PathSearch(EN.Space.GraphMap, P.attr.Locate, sub_locates[index], Config.SearchRange, Config.SoomthRate);
+                P.temp.step = 0;
+                P.temp.State = Agent_state.Walk;
             }
         }
 
-        public override bool CanProceed(Person P, ABM EN)
+        public override bool CanProceed(Agent P, ABM EN)
         {
-            List<string> Nulls = activate_pts_ocu.Where(p => p == "null").ToList();
-            if (Nulls.Count > 0) { return false; }
-
-            if (this.users.Count < activate_pts.Count) { return false; }
-            foreach (Person p in this.users)
+            if (AvailIndex_InQueue().Count > 0) { return false; }
+            if (users.Count < sub_locates.Count) { return false; }
+            foreach (Agent p in users)
             {
-                int k = NameInOccupancy(p);
+                int k = IndexInQueue(p);
                 if (k == -1)
                 { return false; }
-                if (p.Locate.DistanceTo(activate_pts[k]) >= activate_dis)
+                if (p.attr.Locate.DistanceTo(sub_locates[k]) >= activate_dis)
                 { return false; }
             }
 
             return true;
         }
 
-        private List<Memory> IfDidBefore(Person P)
+        public override bool CanBeVisit(Agent P, ABM ABM)
         {
-            List<Memory> RelatedMemors = P.Brain.Where(p => p.Event.ID == this.ID).ToList();
-            return RelatedMemors;
-        }
-
-        private List<int> Viable_act_pts()
-        {
-            List<int> viables = new List<int>();
-            for (int i = 0; i < activate_pts.Count; i++)
-            {
-                if (activate_pts_ocu[i] == "null") { viables.Add(i); }
-            }
-            return viables;
-        }
-
-        private int NameInOccupancy(Person P)
-        {
-            int k = -1;
-            for (int i = 0; i < activate_pts_ocu.Count; i++)
-            {
-                if (activate_pts_ocu[i] == P.Name)
-                {
-                    k = i;
-                }
-            }
-            return k;
-        }
-
-        public override bool CanBeVisit(Person P, ABM ABM)
-        {
-            //This event can be visited only once and by one person;
-            //
-            bool Did = false;
-
-            //if Did
-            List<Memory> RelatedMemors = IfDidBefore(P);
-
-            if (RelatedMemors.Count > 0)
-            {
-                if (RelatedMemors[0].Step == RelatedMemors[0].MaxStep)
-                { Did = true; }
-            }
-
-            if (Did) { return false; }
-
-            if (this.beTarget.Contains(P)) { return true; }
-            if (this.beTarget.Count >= activate_pts.Count) { return false; }
+            if(PreviouslyCompeleted(P))return false;
             return true;
         }
 
-        public override void Expire(Person P)
+        public override void Expire(Agent P)
         {
-            int k = NameInOccupancy(P);
-            if (k == -1) { return; }
-            List<bool> NotFinished = activate_pts_exp.Where(p => p == false).ToList();
-            if (NotFinished.Count == 1 && activate_pts_exp[k] == false)
+            foreach (Agent user in users) 
             {
-                users = new List<Person>();
-                beTarget = new List<Person>();
-                activate_pts_ocu = activate_pts.Select(p => "null").ToList();
-                activate_pts_exp = activate_pts.Select(p => false).ToList();
+                base.Expire(user);
             }
-            else
-            {
-                activate_pts_exp[k] = true;
-            }
+            Reset();
         }
     }
 ```
@@ -370,108 +179,115 @@ __The event can be used by [M: multiple agents], visited in [vS: single time], a
 ## IEvent_M_vS_aS_St_Q: 
 __The event can be used by [M: multiple agents], visited in [vS: single time], activated by [aS: single agent], Standing [St], and form a *queue*__
 ```C#
-    public class IEvent_M_vS_aS_St_Q : Event
+       public class IEvent_M_vS_aS_St_Q : Event
     {
+        string log = "";
         double activate_dis = 0.5;
-        int timeCons = 50;
-        List<Point3d> queue_pts;
-        List<string> queue_ocu_ids;
 
         //A event that provides a queue for users;
-        public IEvent_M_vS_aS_St_Q(string ID, Point3d locate, int TimeConseume, double act_dis, List<Point3d> queue_pts, string Etype)
+        public IEvent_M_vS_aS_St_Q(string ID, Point3d locate, int TimeConseume, double act_dis, List<Point3d> queue_pts, string Etype, Func<List<Event>, Agent, ABM, List<Event>> SelFunc, Object Range, double ra, int poss)
         {
-            this.Type = new EventType(Etype);
-            this.ID = ID;
-            this.locate = locate;
-            this.users = new List<Person>();
-            this.beTarget = new List<Person>();
+            Default_Construct(ID, Etype, SelFunc, locate, TimeConseume, queue_pts, SpaceSearch.ToRTRange(Range, ra), ra, poss);
             activate_dis = act_dis;
-            this.R = 100;
-            this.queue_pts = queue_pts;
-            queue_ocu_ids = queue_pts.Select(p => "null").ToList();
-            timeCons = TimeConseume;
         }
 
-        public override void Affect(Person P, ABM ABM)
+        public override void Affect(Agent P, ABM ABM)
         {
-            if (P.State != Person_state.Busy)
+            if (P.temp.State != Agent_state.Busy)
             {
-                P.State = Person_state.Busy;
+                P.temp.State = Agent_state.Busy;
 
-                if (!this.users.Contains(P) && IfDidBefore(P).Count == 0)
-                {
-                    this.users.Add(P);
-                    P.Brain.Add(new Memory(this, timeCons));
-                }
+                Register_User(P);
 
-                P.Path = new List<Point3d>();
-                P.step = 0;
-
+                P.temp.ClearPath();
             }
         }
-
-        public override bool Activate(Person P, ABM ABM)
+        public override bool Activate(Agent P, ABM ABM)
         {
-
-            bool Did = false;
-            List<Memory> IfDid = IfDidBefore(P);
-            if (IfDid.Count > 0)
-            {
-                Did = IfDid.Last().Step == IfDid.Last().MaxStep;
-            };
-
-            int k = NameInOccupancy(P);
-
+            bool[] condition= Default_ActivateConditions(P, ABM);
+            if (!condition[0]) { return false; }
+            if (!condition[1]) { return false; }
+            if (!condition[2]) { return false; }
+            if (!condition[3]) { return false; }
+  
+            int k = IndexInQueue(P);
             bool reach = false;
-
-            if (k != -1)
+            if (k > -1)
             {
-                reach = queue_pts[k].DistanceTo(P.Locate) < activate_dis;
-            }
-
-            //Not visited, Distance close, Fullfill the plan;
-            if (!Did && reach && IsType(P.NextToDo) && P.Target.ID == this.ID)
-            {
-                return true;
-            }
-            else if (!Did && !reach && IsType(P.NextToDo) && P.Target.ID == this.ID && P.State != Person_state.Busy)
-            {
-                Approach(P, ABM);
-                return false;
+                reach = sub_locates[k].DistanceTo(P.attr.Locate) < activate_dis;//Reach activation scope
             }
             else
             {
+                int index = InertQueue_InOrder(P);
+                if (index > -1){reach = sub_locates[index].DistanceTo(P.attr.Locate) < activate_dis;}
+            }
+
+            //The task is not finished, Location fulfil the queue point, Fullfill the plan;
+            if (reach)
+            {
+                return true;
+            }
+            else if (P.temp.State != Agent_state.Busy)
+            {
+                if (k != -1)
+                {
+                    P.temp.Path = new List<Point3d>() { sub_locates[k] };
+                    P.temp.step = 0;
+                    P.temp.State = Agent_state.Walk;
+                }
+                else
+                {
+                    P.log += "\n [Can not find occupation in queue:]" + this.ID;
+                }
+
                 return false;
             }
-        }
 
-        public override void Approach(Person P, ABM EN)
+            return false;
+        }
+        public override void Approach(Agent P, ABM EN)
         {
-            int k = NameInOccupancy(P);
-            if (k != -1)
+            bool InScope = users.Contains(P);
+
+            int k = IndexInQueue(P);
+            if (k > -1)
             {
-                P.Path = PathNet.ShortestPath_Quick(EN.Space.Quick_WalkSpace, P.Locate, queue_pts[k], Config.SearchRange, Config.SoomthRate);
-                P.step = 0;
-                P.State = Person_state.Walk;
+                if (InScope)
+                {
+                    P.temp.Path = new List<Point3d>() { sub_locates[k] };
+                }
+                else
+                {
+                    P.temp.Path = PathNet.PathSearch(EN.Space.GraphMap, P.attr.Locate, sub_locates[k], Config.SearchRange, Config.SoomthRate);
+                }
+                P.temp.step = 0;
+                P.temp.State = Agent_state.Walk;
             }
 
             if (k == -1)
             {
-                List<int> via_act_pts = Viable_act_pts();
-                if (via_act_pts.Count > 0)
+                int index= InertQueue_InOrder(P);
+                if (index > -1)
                 {
-                    queue_ocu_ids[via_act_pts[0]] = P.Name;
-                    P.Path = PathNet.ShortestPath_Quick(EN.Space.Quick_WalkSpace, P.Locate, queue_pts[via_act_pts[0]], Config.SearchRange, Config.SoomthRate);
-                    P.step = 0;
-                    P.State = Person_state.Walk;
+                    sub_locates_userID[index] = P.attr.ID;
+
+                    if (InScope)
+                    {
+                        P.temp.Path = new List<Point3d>() { sub_locates[index] };
+                    }
+                    else
+                    {
+                        P.temp.Path = PathNet.PathSearch(EN.Space.GraphMap, P.attr.Locate, sub_locates[index], Config.SearchRange, Config.SoomthRate);
+                    }
+                    P.temp.step = 0;
+                    P.temp.State = Agent_state.Walk;
                 }
             }
         }
-
-        public override bool CanProceed(Person P, ABM EN)
+        public override bool CanProceed(Agent P, ABM EN)
         {
-            int k = NameInOccupancy(P);
-            if (k == -1 || P.Locate.DistanceTo(queue_pts[k]) >= activate_dis)
+            int k = IndexInQueue(P);
+            if (k == -1 || P.attr.Locate.DistanceTo(sub_locates[k]) >= activate_dis)
             {
                 return false;
             }
@@ -479,75 +295,35 @@ __The event can be used by [M: multiple agents], visited in [vS: single time], a
             {
                 return true;
             }
-            else
+            else if (sub_locates_userID[k - 1] == "null")
             {
-                if (queue_ocu_ids[k - 1] == "null")
-                { queue_ocu_ids.RemoveAt(k - 1); queue_ocu_ids.Add("null"); }
+                sub_locates_userID.RemoveAt(k - 1); sub_locates_userID.Add("null");
             }
+            else if (sub_locates_userID[k - 1] != "null" && !users.Select(p => p.attr.ID).Contains(sub_locates_userID[k - 1]))
+            {
+                string name = sub_locates_userID[k - 1];
+                sub_locates_userID[k - 1] = P.attr.ID;
+                sub_locates_userID[k] = name;
+            }
+
             return false;
+
         }
 
-        private List<Memory> IfDidBefore(Person P)
+        public override bool IsVacant()
         {
-            List<Memory> RelatedMemors = P.Brain.Where(p => p.Event.ID == this.ID).ToList();
-            return RelatedMemors;
+            return AvailIndex_InQueue().Count > 0;
         }
 
-        private List<int> Viable_act_pts()
+        public override bool CanBeVisit(Agent P, ABM ABM)
         {
-            List<int> viables = new List<int>();
-            for (int i = 0; i < queue_pts.Count; i++)
-            {
-                if (queue_ocu_ids[i] == "null") { viables.Add(i); }
-            }
-            return viables;
-        }
-
-        private int NameInOccupancy(Person P)
-        {
-            int k = -1;
-            for (int i = 0; i < queue_ocu_ids.Count; i++)
-            {
-                if (queue_ocu_ids[i] == P.Name)
-                {
-                    k = i;
-                }
-            }
-            return k;
-        }
-
-        public override bool CanBeVisit(Person P, ABM ABM)
-        {
-            //
-            bool Did = false;
-
-            //if Did
-            List<Memory> RelatedMemors = IfDidBefore(P);
-
-            if (RelatedMemors.Count > 0)
-            {
-                if (RelatedMemors[0].Step == RelatedMemors[0].MaxStep)
-                { Did = true; }
-            }
-
-            if (Did) { return false; }
-            if (this.beTarget.Contains(P)) { return true; }
-            if (this.beTarget.Count >= queue_pts.Count) { return false; }
+            if (PreviouslyCompeleted(P)) return false;
             return true;
         }
 
-        public override void Expire(Person P)
+        public override string ToString()
         {
-            int k = NameInOccupancy(P);
-            if (k == -1) { return; }
-
-            if (k == 0)
-            {
-                queue_ocu_ids.RemoveAt(0);
-                queue_ocu_ids.Add("null");
-            }
-            if (users.Contains(P)) { users.Remove(P); }
-            if (beTarget.Contains(P)) { beTarget.Remove(P); }
+            return log + "\n" + string.Join("|", sub_locates_userID.ToArray());
         }
     }
 ```
