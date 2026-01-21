@@ -1,8 +1,3 @@
-from pathlib import Path
-md = """# BSim (Rhino/Grasshopper) – Core API Reference
-
-This document summarizes the key classes, fields, and methods in the uploaded **BSim** source code, so other developers can *instantiate*, *extend*, and *call* the framework reliably.
-
 > Scope: this reference only covers the uploaded files (`00_Main.cs`–`06_Physic.cs`). A few referenced types (e.g., `PathNet`, `SpaceSearch`, `PreCalMap`, `PhysicalSystem_BSim`, `MiniWatch`, `Agent_Doc`, `Rules_Selection`) are **external** and must be provided by the host project.
 
 ---
